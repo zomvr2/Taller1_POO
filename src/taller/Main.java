@@ -6,25 +6,34 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Scanner;
 
+/**
+ * Sistema simple de registro y analisis de actividades de procrastinacion.
+ */
 public class Main {
+	// Recursos compartidos para lectura de entrada y estado en memoria.
 	static Scanner scanner = new Scanner(System.in);
+
+	// Datos de usuarios (maximo 10).
 	static String[] usuariosID = new String[10];
 	static String[] usuariosPass = new String[10];
 	static int cantidadUsuarios = 0;
 	static String usuarioActual;
 
+	// Datos de actividades registradas (maximo 300).
 	static String[] registrosID = new String[300];
 	static String[] registrosFecha = new String[300];
 	static int[] registrosHoras = new int[300];
 	static String[] registrosActividad = new String[300];
 	static int cantidadRegistros = 0;
 
+	/** Punto de entrada: carga datos y muestra el menu principal. */
 	public static void main(String[] args) {
 		cargarUsuarios();
 		cargarActividades();
 		menuPrincipal();
 	}
 
+	/** Muestra el menu principal del sistema. */
 	public static void menuPrincipal() {
 		System.out.println();
 		System.out.println("==== MENU PRINCIPAL ====");
@@ -53,6 +62,10 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Muestra el menu de usuarios autenticados.
+	 * Requiere inicio de sesion.
+	 */
 	public static void menuUsuarios() {
 		if (!iniciarSesion()) {
 			System.out.println("No puede acceder sin login.");
@@ -100,6 +113,7 @@ public class Main {
 		menuPrincipal();
 	}
 
+	/** Muestra el menu con consultas de analisis. */
 	public static void menuAnalisis() {
 		boolean continuar = true;
 
@@ -140,6 +154,7 @@ public class Main {
 		menuPrincipal();
 	}
 
+	/** Solicita credenciales y guarda el usuario autenticado. */
 	private static boolean iniciarSesion() {
 		System.out.println();
 		System.out.println("---- INICIO DE SESION ----");
@@ -160,6 +175,7 @@ public class Main {
 		}
 	}
 
+	/** Valida si existe un usuario con ese ID y contraseña. */
 	private static boolean verificarUsuario(String id, String pass) {
 		for (int i = 0; i < cantidadUsuarios; i++) {
 			if (usuariosID[i].equals(id) && usuariosPass[i].equals(pass)) {
@@ -170,6 +186,7 @@ public class Main {
 		return false;
 	}
 
+	/** Registra una nueva actividad para el usuario actual. */
 	public static void registrarActividad() {
 		if (cantidadRegistros >= 300) {
 			System.out.println();
@@ -220,6 +237,7 @@ public class Main {
 		System.out.println("Actividad registrada correctamente.");
 	}
 
+	/** Permite editar fecha, horas o actividad de un registro propio. */
 	public static void modificarActividad() {
 		if (cantidadRegistros == 0) {
 			System.out.println();
@@ -346,6 +364,7 @@ public class Main {
 		System.out.println("Actividad actualizada correctamente.");
 	}
 
+	/** Elimina una actividad registrada por el usuario actual. */
 	public static void eliminarActividad() {
 		if (cantidadRegistros == 0) {
 			System.out.println();
@@ -422,6 +441,7 @@ public class Main {
 		System.out.println("Actividad eliminada correctamente.");
 	}
 
+	/** Cambia la contraseña del usuario autenticado. */
 	private static void cambiarContrasena() {
 		System.out.println();
 		System.out.println("---- CAMBIAR CONTRASEÑA ----");
@@ -456,6 +476,7 @@ public class Main {
 		System.out.println("Contraseña cambiada correctamente.");
 	}
 
+	/** Muestra la actividad con mayor cantidad de horas registradas. */
 	private static void getActividadMasRealizada() {
 		if (cantidadRegistros == 0) {
 			System.out.println();
@@ -477,6 +498,7 @@ public class Main {
 		System.out.printf("La actividad mas realizada es: %s con %d horas.%n", actividadMasRealizada, maxHoras);
 	}
 
+	/** Muestra por usuario su actividad con mas horas registradas. */
 	private static void getActividadMasRealizadaPorUsuario() {
 		if (cantidadRegistros == 0) {
 			System.out.println();
@@ -500,6 +522,7 @@ public class Main {
 		}
 	}
 
+	/** Muestra el usuario con mayor suma total de horas. */
 	private static void getUsuarioConMayorProcastinacion() {
 		if (cantidadRegistros == 0) {
 			System.out.println();
@@ -530,6 +553,7 @@ public class Main {
 		System.out.printf("El usuario con mayor procastinacion es: %s con %d horas.%n", usuarioMayorProcastinacion, maxHoras);
 	}
 
+	/** Lista todas las actividades almacenadas. */
 	public static void getTodasLasActividades() {
 		if (cantidadRegistros == 0) {
 			System.out.println();
@@ -545,6 +569,7 @@ public class Main {
 		}
 	}
 
+	/** Carga los usuarios desde el archivo usuarios.txt. */
 	private static void cargarUsuarios() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("usuarios.txt"));
@@ -572,6 +597,7 @@ public class Main {
 		}
 	}
 
+	/** Carga los registros desde el archivo registros.txt. */
 	private static void cargarActividades() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("registros.txt"));
@@ -603,6 +629,7 @@ public class Main {
 		}
 	}
 
+	/** Guarda los usuarios en el archivo usuarios.txt. */
 	private static void guardarUsuarios() {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter("usuarios.txt", false));
@@ -618,6 +645,7 @@ public class Main {
 		}
 	}
 
+	/** Guarda los registros en el archivo registros.txt. */
 	private static void guardarRegistros() {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter("registros.txt", false));
