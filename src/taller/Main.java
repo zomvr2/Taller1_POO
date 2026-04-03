@@ -80,7 +80,7 @@ public class Main {
 					registrarActividad();
 					break;
 				case "2":
-					// Modificar actividad
+					modificarActividad();
 					break;
 				case "3":
 					// Eliminar actividad
@@ -149,6 +149,102 @@ public class Main {
 
 		System.out.println();
 		System.out.println("Actividad registrada correctamente.");
+	}
+
+	public static void modificarActividad() {
+		if (cantidadRegistros == 0) {
+			System.out.println();
+			System.out.println("No hay actividades registradas para modificar.");
+			return;
+		}
+
+		System.out.println();
+		System.out.println("---- MODIFICAR ACTIVIDAD ----");
+
+		System.out.println("0) Regresar");
+		int[] indicesVisibles = new int[300];
+		int cantidadOpciones = 0;
+
+		for (int i = 0; i < cantidadRegistros; i++) {
+			if (registrosID[i].equals(usuarioActual)) {
+				cantidadOpciones++;
+				indicesVisibles[cantidadOpciones - 1] = i;
+				System.out.printf("%d) %s - %s - %d horas - %s%n", cantidadOpciones, registrosID[i], registrosFecha[i], registrosHoras[i], registrosActividad[i]);
+			}
+		}
+
+		if (cantidadOpciones == 0) {
+			System.out.println("No tiene actividades registradas para modificar.");
+			return;
+		}
+
+		System.out.print("Seleccione la actividad a modificar: ");
+		String opcion = scanner.nextLine();
+
+		if (opcion.equals("0")) {
+			return;
+		}
+
+		int seleccion;
+
+		try {
+			seleccion = Integer.parseInt(opcion);
+		} catch (Exception e) {
+			System.out.println();
+			System.out.println("Opcion no valida.");
+			return;
+		}
+
+		if (seleccion < 1 || seleccion > cantidadOpciones) {
+			System.out.println();
+			System.out.println("Opcion no valida.");
+			return;
+		}
+
+		int indice = indicesVisibles[seleccion - 1];
+
+		if (!registrosID[indice].equals(usuarioActual)) {
+			System.out.println();
+			System.out.println("No puede modificar actividades de otros usuarios.");
+			return;
+		}
+
+		System.out.print("Ingrese la nueva fecha (dd/mm/aaaa): ");
+		String fecha = scanner.nextLine();
+		System.out.print("Ingrese las nuevas horas procrastinadas: ");
+		String horasTexto = scanner.nextLine();
+		System.out.print("Ingrese la nueva actividad: ");
+		String actividad = scanner.nextLine();
+
+		if (fecha.length() == 0 || horasTexto.length() == 0 || actividad.length() == 0) {
+			System.out.println();
+			System.out.println("Todos los campos son obligatorios.");
+			return;
+		}
+
+		int horas;
+
+		try {
+			horas = Integer.parseInt(horasTexto);
+		} catch (Exception e) {
+			System.out.println();
+			System.out.println("Las horas deben ser un numero entero valido.");
+			return;
+		}
+
+		if (horas <= 0) {
+			System.out.println();
+			System.out.println("Las horas deben ser mayores que cero.");
+			return;
+		}
+
+		registrosFecha[indice] = fecha;
+		registrosHoras[indice] = horas;
+		registrosActividad[indice] = actividad;
+
+		guardarRegistros();
+		System.out.println();
+		System.out.println("Actividad actualizada correctamente.");
 	}
 
 	private static void guardarRegistros() {
