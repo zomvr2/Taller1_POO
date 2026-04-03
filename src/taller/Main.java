@@ -86,7 +86,7 @@ public class Main {
 					eliminarActividad();
 					break;
 				case "4":
-					// Cambiar contraseña
+					cambiarContrasena();
 					break;
 				case "5":
 					usuarioActual = null;
@@ -277,21 +277,6 @@ public class Main {
 		System.out.println("Actividad actualizada correctamente.");
 	}
 
-	private static void guardarRegistros() {
-		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter("registros.txt", false));
-
-			for (int i = 0; i < cantidadRegistros; i++) {
-				bw.write(registrosID[i] + ";" + registrosFecha[i] + ";" + registrosHoras[i] + ";" + registrosActividad[i]);
-				bw.newLine();
-			}
-
-			bw.close();
-		} catch (Exception e) {
-			System.out.println("Error al guardar actividades: " + e.getMessage());
-		}
-	}
-
 	public static void eliminarActividad() {
 		if (cantidadRegistros == 0) {
 			System.out.println();
@@ -368,38 +353,151 @@ public class Main {
 		System.out.println("Actividad eliminada correctamente.");
 	}
 
-	public static void menuAnalisis() {
+	private static void cambiarContrasena() {
 		System.out.println();
-		System.out.println("==== MENU DE ANALISIS ====");
-		System.out.println("1) Actividad mas realizada");
-		System.out.println("2) Actividad mas realizada por cada usuario");
-		System.out.println("3) Usuario con mayor procastinacion");
-		System.out.println("4) Ver todas las actividades");
-		System.out.println("5) Salir");
-		System.out.print("Seleccione una opcion: ");
+		System.out.println("---- CAMBIAR CONTRASEÑA ----");
+		System.out.print("Ingrese su contraseña actual: ");
+		String passActual = scanner.nextLine();
 
-		String opcion = scanner.nextLine();
+		if (!verificarUsuario(usuarioActual, passActual)) {
+			System.out.println();
+			System.out.println("Contraseña actual incorrecta.");
+			return;
+		}
 
-		switch (opcion) {
-			case "1":
-				// Actividad más realizada
+		System.out.print("Ingrese su nueva contraseña: ");
+		String passNueva = scanner.nextLine();
+
+		if (passNueva.length() == 0) {
+			System.out.println();
+			System.out.println("La nueva contraseña no puede estar vacia.");
+			return;
+		}
+
+		for (int i = 0; i < cantidadUsuarios; i++) {
+			if (usuariosID[i].equals(usuarioActual)) {
+				usuariosPass[i] = passNueva;
 				break;
-			case "2":
-				// Actividad más realizada por cada usuario
-				break;
-			case "3":
-				// Usuario con mayor procastinacion
-				break;
-			case "4":
-				// Ver todas las actividades
-				break;
-			case "5":
-				menuPrincipal();
-				break;
-			default:
-				System.out.println();
-				System.out.println("Opcion no valida.");
-				menuAnalisis();
+			}
+		}
+
+		guardarUsuarios();
+
+		System.out.println();
+		System.out.println("Contraseña cambiada correctamente.");
+	}
+
+	private static void guardarUsuarios() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter("usuarios.txt", false));
+
+			for (int i = 0; i < cantidadUsuarios; i++) {
+				bw.write(usuariosID[i] + ";" + usuariosPass[i]);
+				bw.newLine();
+			}
+
+			bw.close();
+		} catch (Exception e) {
+			System.out.println("Error al guardar usuarios: " + e.getMessage());
+		}
+	}
+
+	private static void guardarRegistros() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter("registros.txt", false));
+
+			for (int i = 0; i < cantidadRegistros; i++) {
+				bw.write(registrosID[i] + ";" + registrosFecha[i] + ";" + registrosHoras[i] + ";" + registrosActividad[i]);
+				bw.newLine();
+			}
+
+			bw.close();
+		} catch (Exception e) {
+			System.out.println("Error al guardar actividades: " + e.getMessage());
+		}
+	}
+
+	public static void menuAnalisis() {
+		boolean continuar = true;
+
+		while (continuar) {
+			System.out.println();
+			System.out.println("==== MENU DE ANALISIS ====");
+			System.out.println("1) Actividad mas realizada");
+			System.out.println("2) Actividad mas realizada por cada usuario");
+			System.out.println("3) Usuario con mayor procastinacion");
+			System.out.println("4) Ver todas las actividades");
+			System.out.println("5) Salir");
+			System.out.print("Seleccione una opcion: ");
+
+			String opcion = scanner.nextLine();
+
+			switch (opcion) {
+				case "1":
+					getActividadMasRealizada();
+					break;
+				case "2":
+					getActividadMasRealizadaPorUsuario();
+					break;
+				case "3":
+					// Usuario con mayor procastinacion
+					break;
+				case "4":
+					// Ver todas las actividades
+					break;
+				case "5":
+					continuar = false;
+					break;
+				default:
+					System.out.println();
+					System.out.println("Opcion no valida.");
+			}
+		}
+
+		menuPrincipal();
+	}
+
+	private static void getActividadMasRealizada() {
+		if (cantidadRegistros == 0) {
+			System.out.println();
+			System.out.println("No hay actividades registradas para analizar.");
+			return;
+		}
+
+		String actividadMasRealizada = null;
+		int maxHoras = 0;
+
+		for (int i = 0; i < cantidadRegistros; i++) {
+			if (registrosHoras[i] > maxHoras) {
+				maxHoras = registrosHoras[i];
+				actividadMasRealizada = registrosActividad[i];
+			}
+		}
+
+		System.out.println();
+		System.out.printf("La actividad mas realizada es: %s con %d horas.%n", actividadMasRealizada, maxHoras);
+	}
+
+	private static void getActividadMasRealizadaPorUsuario() {
+		if (cantidadRegistros == 0) {
+			System.out.println();
+			System.out.println("No hay actividades registradas para analizar.");
+			return;
+		}
+
+		for (int i = 0; i < cantidadUsuarios; i++) {
+			String usuario = usuariosID[i];
+			String actividadMasRealizada = null;
+			int maxHoras = 0;
+
+			for (int j = 0; j < cantidadRegistros; j++) {
+				if (registrosID[j].equals(usuario) && registrosHoras[j] > maxHoras) {
+					maxHoras = registrosHoras[j];
+					actividadMasRealizada = registrosActividad[j];
+				}
+			}
+
+			System.out.printf("* %s ->  %s -> %d horas registradas.%n", usuario, actividadMasRealizada, maxHoras);
 		}
 	}
 
