@@ -209,38 +209,68 @@ public class Main {
 			return;
 		}
 
-		System.out.print("Ingrese la nueva fecha (dd/mm/aaaa): ");
-		String fecha = scanner.nextLine();
-		System.out.print("Ingrese las nuevas horas procrastinadas: ");
-		String horasTexto = scanner.nextLine();
-		System.out.print("Ingrese la nueva actividad: ");
-		String actividad = scanner.nextLine();
+		System.out.println();
+		System.out.println("Que deseas modificar?");
+		System.out.println("0) Regresar.");
+		System.out.println("1) Fecha");
+		System.out.println("2) Duracion");
+		System.out.println("3) Tipo de actividad");
+		System.out.print("Seleccione una opcion: ");
+		String opcionCampo = scanner.nextLine();
 
-		if (fecha.length() == 0 || horasTexto.length() == 0 || actividad.length() == 0) {
-			System.out.println();
-			System.out.println("Todos los campos son obligatorios.");
-			return;
+		switch (opcionCampo) {
+			case "0":
+				return;
+			case "1":
+				System.out.print("Ingrese la nueva fecha (dd/mm/aaaa): ");
+				String fecha = scanner.nextLine();
+
+				if (fecha.length() == 0) {
+					System.out.println();
+					System.out.println("La fecha es obligatoria.");
+					return;
+				}
+
+				registrosFecha[indice] = fecha;
+				break;
+			case "2":
+				System.out.print("Ingrese las nuevas horas procrastinadas: ");
+				String horasTexto = scanner.nextLine();
+				int horas;
+
+				try {
+					horas = Integer.parseInt(horasTexto);
+				} catch (Exception e) {
+					System.out.println();
+					System.out.println("Las horas deben ser un numero entero valido.");
+					return;
+				}
+
+				if (horas <= 0) {
+					System.out.println();
+					System.out.println("Las horas deben ser mayores que cero.");
+					return;
+				}
+
+				registrosHoras[indice] = horas;
+				break;
+			case "3":
+				System.out.print("Ingrese la nueva actividad: ");
+				String actividad = scanner.nextLine();
+
+				if (actividad.length() == 0) {
+					System.out.println();
+					System.out.println("La actividad es obligatoria.");
+					return;
+				}
+
+				registrosActividad[indice] = actividad;
+				break;
+			default:
+				System.out.println();
+				System.out.println("Opcion no valida.");
+				return;
 		}
-
-		int horas;
-
-		try {
-			horas = Integer.parseInt(horasTexto);
-		} catch (Exception e) {
-			System.out.println();
-			System.out.println("Las horas deben ser un numero entero valido.");
-			return;
-		}
-
-		if (horas <= 0) {
-			System.out.println();
-			System.out.println("Las horas deben ser mayores que cero.");
-			return;
-		}
-
-		registrosFecha[indice] = fecha;
-		registrosHoras[indice] = horas;
-		registrosActividad[indice] = actividad;
 
 		guardarRegistros();
 		System.out.println();
