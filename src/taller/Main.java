@@ -440,10 +440,10 @@ public class Main {
 					getActividadMasRealizadaPorUsuario();
 					break;
 				case "3":
-					// Usuario con mayor procastinacion
+					getUsuarioConMayorProcastinacion();
 					break;
 				case "4":
-					// Ver todas las actividades
+					getTodasLasActividades();
 					break;
 				case "5":
 					continuar = false;
@@ -498,6 +498,51 @@ public class Main {
 			}
 
 			System.out.printf("* %s ->  %s -> %d horas registradas.%n", usuario, actividadMasRealizada, maxHoras);
+		}
+	}
+
+	private static void getUsuarioConMayorProcastinacion() {
+		if (cantidadRegistros == 0) {
+			System.out.println();
+			System.out.println("No hay actividades registradas para analizar.");
+			return;
+		}
+
+		String usuarioMayorProcastinacion = null;
+		int maxHoras = 0;
+
+		for (int i = 0; i < cantidadUsuarios; i++) {
+			String usuario = usuariosID[i];
+			int totalHoras = 0;
+
+			for (int j = 0; j < cantidadRegistros; j++) {
+				if (registrosID[j].equals(usuario)) {
+					totalHoras += registrosHoras[j];
+				}
+			}
+
+			if (totalHoras > maxHoras) {
+				maxHoras = totalHoras;
+				usuarioMayorProcastinacion = usuario;
+			}
+		}
+
+		System.out.println();
+		System.out.printf("El usuario con mayor procastinacion es: %s con %d horas.%n", usuarioMayorProcastinacion, maxHoras);
+	}
+
+	public static void getTodasLasActividades() {
+		if (cantidadRegistros == 0) {
+			System.out.println();
+			System.out.println("No hay actividades registradas para mostrar.");
+			return;
+		}
+
+		System.out.println();
+		System.out.println("---- TODAS LAS ACTIVIDADES ----");
+
+		for (int i = 0; i < cantidadRegistros; i++) {
+			System.out.printf("%s - %s - %d horas - %s%n", registrosID[i], registrosFecha[i], registrosHoras[i], registrosActividad[i]);
 		}
 	}
 
