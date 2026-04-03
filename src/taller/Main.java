@@ -1,10 +1,13 @@
 package taller;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Scanner;
 
 public class Main {
+	static Scanner scanner = new Scanner(System.in);
 	static String[] usuariosID = new String[10];
 	static String[] usuariosPass = new String[10];
 	static int cantidadUsuarios = 0;
@@ -24,8 +27,6 @@ public class Main {
 	}
 
 	public static void menuPrincipal() {
-		Scanner scanner = new Scanner(System.in);
-
 		System.out.println();
 		System.out.println("==== MENU PRINCIPAL ====");
 		System.out.println("1) Menu de Usuarios");
@@ -60,45 +61,112 @@ public class Main {
 			return;
 		}
 
-		Scanner scanner = new Scanner(System.in);
+		boolean continuar = true;
+
+		while (continuar) {
+			System.out.println();
+			System.out.println("==== MENU DE USUARIOS ====");
+			System.out.println("1) Registrar actividad");
+			System.out.println("2) Modificar actividad");
+			System.out.println("3) Eliminar actividad");
+			System.out.println("4) Cambiar contraseña");
+			System.out.println("5) Salir");
+			System.out.print("Seleccione una opcion: ");
+
+			String opcion = scanner.nextLine();
+
+			switch (opcion) {
+				case "1":
+					registrarActividad();
+					break;
+				case "2":
+					// Modificar actividad
+					break;
+				case "3":
+					// Eliminar actividad
+					break;
+				case "4":
+					// Cambiar contraseña
+					break;
+				case "5":
+					usuarioActual = null;
+					continuar = false;
+					break;
+				default:
+					System.out.println();
+					System.out.println("Opcion no valida.");
+			}
+		}
+
+		menuPrincipal();
+	}
+
+	public static void registrarActividad() {
+		if (cantidadRegistros >= 300) {
+			System.out.println();
+			System.out.println("No se pueden registrar mas actividades.");
+			return;
+		}
 
 		System.out.println();
-		System.out.println("==== MENU DE USUARIOS ====");
-		System.out.println("1) Registrar actividad");
-		System.out.println("2) Modificar actividad");
-		System.out.println("3) Eliminar actividad");
-		System.out.println("4) Cambiar contraseña");
-		System.out.println("5) Salir");
-		System.out.print("Seleccione una opcion: ");
+		System.out.println("---- REGISTRAR ACTIVIDAD ----");
+		System.out.print("Ingrese la fecha (dd/mm/aaaa): ");
+		String fecha = scanner.nextLine();
+		System.out.print("Ingrese las horas procrastinadas: ");
+		String horasTexto = scanner.nextLine();
+		System.out.print("Ingrese la actividad: ");
+		String actividad = scanner.nextLine();
 
-		String opcion = scanner.nextLine();
+		if (fecha.length() == 0 || horasTexto.length() == 0 || actividad.length() == 0) {
+			System.out.println();
+			System.out.println("Todos los campos son obligatorios.");
+			return;
+		}
 
-		switch (opcion) {
-			case "1":
-				// Registrar actividad
-				break;
-			case "2":
-				// Modificar actividad
-				break;
-			case "3":
-				// Eliminar actividad
-				break;
-			case "4":
-				// Cambiar contraseña
-				break;
-			case "5":
-				menuPrincipal();
-				break;
-			default:
-				System.out.println();
-				System.out.println("Opcion no valida.");
-				menuUsuarios();
+		int horas;
+
+		try {
+			horas = Integer.parseInt(horasTexto);
+		} catch (Exception e) {
+			System.out.println();
+			System.out.println("Las horas deben ser un numero entero valido.");
+			return;
+		}
+
+		if (horas <= 0) {
+			System.out.println();
+			System.out.println("Las horas deben ser mayores que cero.");
+			return;
+		}
+
+		registrosID[cantidadRegistros] = usuarioActual;
+		registrosFecha[cantidadRegistros] = fecha;
+		registrosHoras[cantidadRegistros] = horas;
+		registrosActividad[cantidadRegistros] = actividad;
+		cantidadRegistros++;
+
+		guardarRegistros();
+
+		System.out.println();
+		System.out.println("Actividad registrada correctamente.");
+	}
+
+	private static void guardarRegistros() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter("registros.txt", false));
+
+			for (int i = 0; i < cantidadRegistros; i++) {
+				bw.write(registrosID[i] + ";" + registrosFecha[i] + ";" + registrosHoras[i] + ";" + registrosActividad[i]);
+				bw.newLine();
+			}
+
+			bw.close();
+		} catch (Exception e) {
+			System.out.println("Error al guardar actividades: " + e.getMessage());
 		}
 	}
 
 	public static void menuAnalisis() {
-		Scanner scanner = new Scanner(System.in);
-
 		System.out.println();
 		System.out.println("==== MENU DE ANALISIS ====");
 		System.out.println("1) Actividad mas realizada");
@@ -202,8 +270,6 @@ public class Main {
 	}
 
 	private static boolean iniciarSesion() {
-		Scanner scanner = new Scanner(System.in);
-
 		System.out.println();
 		System.out.println("---- INICIO DE SESION ----");
 		System.out.print("Ingrese su usuario: ");
