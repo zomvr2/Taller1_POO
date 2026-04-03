@@ -1,10 +1,18 @@
 package taller;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Scanner;
 
 public class Main {
+	static String[] usuariosID = new String[10];
+	static String[] usuariosPass = new String[10];
+	static int cantidadUsuarios = 0;
+
+
 
 	public static void main(String[] args) {
+		cargarUsuarios();
 		menuPrincipal();
 	}
 
@@ -96,6 +104,33 @@ public class Main {
 			default:
 				System.out.println("Opcion no valida");
 				menuAnalisis();
+		}
+	}
+
+	static void cargarUsuarios() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("usuarios.txt"));
+			String linea = br.readLine();
+
+			while (linea != null && cantidadUsuarios < 10) {
+				String[] partes = linea.split(";");
+
+				if (partes.length == 2) {
+					String id = partes[0];
+					String pass = partes[1];
+
+					usuariosID[cantidadUsuarios] = id;
+					usuariosPass[cantidadUsuarios] = pass;
+
+					cantidadUsuarios++;
+				}
+
+				linea = br.readLine();
+			}
+
+			br.close();
+		} catch (Exception e) {
+			System.out.println("Error al cargar usuarios: " + e.getMessage());
 		}
 	}
 }
