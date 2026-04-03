@@ -20,9 +20,12 @@ public class Main {
 	public static void menuPrincipal() {
 		Scanner scanner = new Scanner(System.in);
 
-		System.out.println("1) Menu de Usuarios\n" +
-											 "2) Menu de Analisis\n" +
-											 "3) Salir");
+		System.out.println();
+		System.out.println("==== MENU PRINCIPAL ====");
+		System.out.println("1) Menu de Usuarios");
+		System.out.println("2) Menu de Analisis");
+		System.out.println("3) Salir");
+		System.out.print("Seleccione una opcion: ");
 
 		String opcion = scanner.nextLine();
 
@@ -34,28 +37,33 @@ public class Main {
 				menuAnalisis();
 				break;
 			case "3":
+				System.out.println();
 				System.out.println("Saliendo...");
 				break;
 			default:
-				System.out.println("Opcion no valida");
+				System.out.println();
+				System.out.println("Opcion no valida.");
 				menuPrincipal();
 		}
 	}
 
 	public static void menuUsuarios() {
 		if (!iniciarSesion()) {
-        System.out.println("No puede acceder sin login");
-        menuPrincipal();  // Volver al menú principal
-        return;
-    }
+			System.out.println("No puede acceder sin login.");
+			menuPrincipal();
+			return;
+		}
 
 		Scanner scanner = new Scanner(System.in);
 
-		System.out.println("1) Registrar actividad\n" +
-											 "2) Modificar actividad\n" +
-											 "3) Eliminar actividad\n" +
-											 "4) Cambiar contraseña\n" +
-											 "5) Salir");
+		System.out.println();
+		System.out.println("==== MENU DE USUARIOS ====");
+		System.out.println("1) Registrar actividad");
+		System.out.println("2) Modificar actividad");
+		System.out.println("3) Eliminar actividad");
+		System.out.println("4) Cambiar contraseña");
+		System.out.println("5) Salir");
+		System.out.print("Seleccione una opcion: ");
 
 		String opcion = scanner.nextLine();
 
@@ -76,7 +84,8 @@ public class Main {
 				menuPrincipal();
 				break;
 			default:
-				System.out.println("Opcion no valida");
+				System.out.println();
+				System.out.println("Opcion no valida.");
 				menuUsuarios();
 		}
 	}
@@ -84,11 +93,14 @@ public class Main {
 	public static void menuAnalisis() {
 		Scanner scanner = new Scanner(System.in);
 
-		System.out.println("1) Actividad más realizada\n" +
-											 "2) Actividad más realizada por cada usuario\n" +
-											 "3) Usuario con mayor procastinacion\n" +
-											 "4) Ver todas las actividades\n" +
-											 "5) Salir");
+		System.out.println();
+		System.out.println("==== MENU DE ANALISIS ====");
+		System.out.println("1) Actividad mas realizada");
+		System.out.println("2) Actividad mas realizada por cada usuario");
+		System.out.println("3) Usuario con mayor procastinacion");
+		System.out.println("4) Ver todas las actividades");
+		System.out.println("5) Salir");
+		System.out.print("Seleccione una opcion: ");
 
 		String opcion = scanner.nextLine();
 
@@ -109,7 +121,8 @@ public class Main {
 				menuPrincipal();
 				break;
 			default:
-				System.out.println("Opcion no valida");
+				System.out.println();
+				System.out.println("Opcion no valida.");
 				menuAnalisis();
 		}
 	}
@@ -154,17 +167,21 @@ public class Main {
 	static boolean iniciarSesion() {
 		Scanner scanner = new Scanner(System.in);
 
+		System.out.println();
+		System.out.println("---- INICIO DE SESION ----");
 		System.out.print("Ingrese su usuario: ");
-    String id = scanner.nextLine();
-    System.out.print("Ingrese su contraseña: ");
-    String pass = scanner.nextLine();
+		String id = scanner.nextLine();
+		System.out.print("Ingrese su contraseña: ");
+		String pass = scanner.nextLine();
 
 		if (verificarUsuario(id, pass)) {
 			usuarioActual = id;
+			System.out.println();
 			System.out.printf("Bienvenido %s!%n", id);
 			return true;
 		} else {
-			System.out.println("Usuario o contraseña incorrectos\n");
+			System.out.println();
+			System.out.println("Usuario o contraseña incorrectos.");
 			return false;
 		}
 	}
