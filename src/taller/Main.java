@@ -8,6 +8,7 @@ public class Main {
 	static String[] usuariosID = new String[10];
 	static String[] usuariosPass = new String[10];
 	static int cantidadUsuarios = 0;
+	static String usuarioActual;
 
 
 
@@ -42,6 +43,12 @@ public class Main {
 	}
 
 	public static void menuUsuarios() {
+		if (!iniciarSesion()) {
+        System.out.println("No puede acceder sin login");
+        menuPrincipal();  // Volver al menú principal
+        return;
+    }
+
 		Scanner scanner = new Scanner(System.in);
 
 		System.out.println("1) Registrar actividad\n" +
@@ -131,6 +138,34 @@ public class Main {
 			br.close();
 		} catch (Exception e) {
 			System.out.println("Error al cargar usuarios: " + e.getMessage());
+		}
+	}
+
+	static boolean verificarUsuario(String id, String pass) {
+		for (int i = 0; i < cantidadUsuarios; i++) {
+			if (usuariosID[i].equals(id) && usuariosPass[i].equals(pass)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	static boolean iniciarSesion() {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.print("Ingrese su usuario: ");
+    String id = scanner.nextLine();
+    System.out.print("Ingrese su contraseña: ");
+    String pass = scanner.nextLine();
+
+		if (verificarUsuario(id, pass)) {
+			usuarioActual = id;
+			System.out.printf("Bienvenido %s!%n", id);
+			return true;
+		} else {
+			System.out.println("Usuario o contraseña incorrectos\n");
+			return false;
 		}
 	}
 }
