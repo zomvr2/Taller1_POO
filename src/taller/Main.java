@@ -10,10 +10,16 @@ public class Main {
 	static int cantidadUsuarios = 0;
 	static String usuarioActual;
 
+	static String[] registrosID = new String[300];
+	static String[] registrosFecha = new String[300];
+	static int[] registrosHoras = new int[300];
+	static String[] registrosActividad = new String[300];
+	static int cantidadRegistros = 0;
 
 
 	public static void main(String[] args) {
 		cargarUsuarios();
+		cargarActividades();
 		menuPrincipal();
 	}
 
@@ -151,6 +157,37 @@ public class Main {
 			br.close();
 		} catch (Exception e) {
 			System.out.println("Error al cargar usuarios: " + e.getMessage());
+		}
+	}
+
+	private static void cargarActividades() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("registros.txt"));
+			String linea = br.readLine();
+
+			while (linea != null) {
+				String[] partes = linea.split(";");
+
+				if (partes.length == 4 && cantidadRegistros < 300) {
+					String id = partes[0];
+					String fecha = partes[1];
+					int horas = Integer.parseInt(partes[2]);
+					String actividad = partes[3];
+
+					registrosID[cantidadRegistros] = id;
+					registrosFecha[cantidadRegistros] = fecha;
+					registrosHoras[cantidadRegistros] = horas;
+					registrosActividad[cantidadRegistros] = actividad;
+
+					cantidadRegistros++;
+				}
+
+				linea = br.readLine();
+			}
+
+			br.close();
+		} catch(Exception e) {
+			System.out.println("Error al cargar actividades: " + e.getMessage());
 		}
 	}
 
