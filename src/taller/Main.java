@@ -19,7 +19,6 @@ public class Main {
 	static String[] registrosActividad = new String[300];
 	static int cantidadRegistros = 0;
 
-
 	public static void main(String[] args) {
 		cargarUsuarios();
 		cargarActividades();
@@ -99,6 +98,76 @@ public class Main {
 		}
 
 		menuPrincipal();
+	}
+
+	public static void menuAnalisis() {
+		boolean continuar = true;
+
+		while (continuar) {
+			System.out.println();
+			System.out.println("==== MENU DE ANALISIS ====");
+			System.out.println("1) Actividad mas realizada");
+			System.out.println("2) Actividad mas realizada por cada usuario");
+			System.out.println("3) Usuario con mayor procastinacion");
+			System.out.println("4) Ver todas las actividades");
+			System.out.println("5) Salir");
+			System.out.print("Seleccione una opcion: ");
+
+			String opcion = scanner.nextLine();
+
+			switch (opcion) {
+				case "1":
+					getActividadMasRealizada();
+					break;
+				case "2":
+					getActividadMasRealizadaPorUsuario();
+					break;
+				case "3":
+					getUsuarioConMayorProcastinacion();
+					break;
+				case "4":
+					getTodasLasActividades();
+					break;
+				case "5":
+					continuar = false;
+					break;
+				default:
+					System.out.println();
+					System.out.println("Opcion no valida.");
+			}
+		}
+
+		menuPrincipal();
+	}
+
+	private static boolean iniciarSesion() {
+		System.out.println();
+		System.out.println("---- INICIO DE SESION ----");
+		System.out.print("Ingrese su usuario: ");
+		String id = scanner.nextLine();
+		System.out.print("Ingrese su contraseña: ");
+		String pass = scanner.nextLine();
+
+		if (verificarUsuario(id, pass)) {
+			usuarioActual = id;
+			System.out.println();
+			System.out.printf("Bienvenido %s!%n", id);
+			return true;
+		} else {
+			System.out.println();
+			System.out.println("Usuario o contraseña incorrectos.");
+			return false;
+		}
+	}
+
+	private static boolean verificarUsuario(String id, String pass) {
+		for (int i = 0; i < cantidadUsuarios; i++) {
+			if (usuariosID[i].equals(id) && usuariosPass[i].equals(pass)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public static void registrarActividad() {
@@ -387,76 +456,6 @@ public class Main {
 		System.out.println("Contraseña cambiada correctamente.");
 	}
 
-	private static void guardarUsuarios() {
-		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter("usuarios.txt", false));
-
-			for (int i = 0; i < cantidadUsuarios; i++) {
-				bw.write(usuariosID[i] + ";" + usuariosPass[i]);
-				bw.newLine();
-			}
-
-			bw.close();
-		} catch (Exception e) {
-			System.out.println("Error al guardar usuarios: " + e.getMessage());
-		}
-	}
-
-	private static void guardarRegistros() {
-		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter("registros.txt", false));
-
-			for (int i = 0; i < cantidadRegistros; i++) {
-				bw.write(registrosID[i] + ";" + registrosFecha[i] + ";" + registrosHoras[i] + ";" + registrosActividad[i]);
-				bw.newLine();
-			}
-
-			bw.close();
-		} catch (Exception e) {
-			System.out.println("Error al guardar actividades: " + e.getMessage());
-		}
-	}
-
-	public static void menuAnalisis() {
-		boolean continuar = true;
-
-		while (continuar) {
-			System.out.println();
-			System.out.println("==== MENU DE ANALISIS ====");
-			System.out.println("1) Actividad mas realizada");
-			System.out.println("2) Actividad mas realizada por cada usuario");
-			System.out.println("3) Usuario con mayor procastinacion");
-			System.out.println("4) Ver todas las actividades");
-			System.out.println("5) Salir");
-			System.out.print("Seleccione una opcion: ");
-
-			String opcion = scanner.nextLine();
-
-			switch (opcion) {
-				case "1":
-					getActividadMasRealizada();
-					break;
-				case "2":
-					getActividadMasRealizadaPorUsuario();
-					break;
-				case "3":
-					getUsuarioConMayorProcastinacion();
-					break;
-				case "4":
-					getTodasLasActividades();
-					break;
-				case "5":
-					continuar = false;
-					break;
-				default:
-					System.out.println();
-					System.out.println("Opcion no valida.");
-			}
-		}
-
-		menuPrincipal();
-	}
-
 	private static void getActividadMasRealizada() {
 		if (cantidadRegistros == 0) {
 			System.out.println();
@@ -604,33 +603,33 @@ public class Main {
 		}
 	}
 
-	private static boolean verificarUsuario(String id, String pass) {
-		for (int i = 0; i < cantidadUsuarios; i++) {
-			if (usuariosID[i].equals(id) && usuariosPass[i].equals(pass)) {
-				return true;
-			}
-		}
+	private static void guardarUsuarios() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter("usuarios.txt", false));
 
-		return false;
+			for (int i = 0; i < cantidadUsuarios; i++) {
+				bw.write(usuariosID[i] + ";" + usuariosPass[i]);
+				bw.newLine();
+			}
+
+			bw.close();
+		} catch (Exception e) {
+			System.out.println("Error al guardar usuarios: " + e.getMessage());
+		}
 	}
 
-	private static boolean iniciarSesion() {
-		System.out.println();
-		System.out.println("---- INICIO DE SESION ----");
-		System.out.print("Ingrese su usuario: ");
-		String id = scanner.nextLine();
-		System.out.print("Ingrese su contraseña: ");
-		String pass = scanner.nextLine();
+	private static void guardarRegistros() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter("registros.txt", false));
 
-		if (verificarUsuario(id, pass)) {
-			usuarioActual = id;
-			System.out.println();
-			System.out.printf("Bienvenido %s!%n", id);
-			return true;
-		} else {
-			System.out.println();
-			System.out.println("Usuario o contraseña incorrectos.");
-			return false;
+			for (int i = 0; i < cantidadRegistros; i++) {
+				bw.write(registrosID[i] + ";" + registrosFecha[i] + ";" + registrosHoras[i] + ";" + registrosActividad[i]);
+				bw.newLine();
+			}
+
+			bw.close();
+		} catch (Exception e) {
+			System.out.println("Error al guardar actividades: " + e.getMessage());
 		}
 	}
 }
