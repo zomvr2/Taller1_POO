@@ -83,7 +83,7 @@ public class Main {
 					modificarActividad();
 					break;
 				case "3":
-					// Eliminar actividad
+					eliminarActividad();
 					break;
 				case "4":
 					// Cambiar contraseña
@@ -260,6 +260,82 @@ public class Main {
 		} catch (Exception e) {
 			System.out.println("Error al guardar actividades: " + e.getMessage());
 		}
+	}
+
+	public static void eliminarActividad() {
+		if (cantidadRegistros == 0) {
+			System.out.println();
+			System.out.println("No hay actividades registradas para eliminar.");
+			return;
+		}
+
+		System.out.println();
+		System.out.println("---- ELIMINAR ACTIVIDAD ----");
+
+		System.out.println("0) Regresar");
+		int[] indicesVisibles = new int[300];
+		int cantidadOpciones = 0;
+
+		for (int i = 0; i < cantidadRegistros; i++) {
+			if (registrosID[i].equals(usuarioActual)) {
+				cantidadOpciones++;
+				indicesVisibles[cantidadOpciones - 1] = i;
+				System.out.printf("%d) %s - %s - %d horas - %s%n", cantidadOpciones, registrosID[i], registrosFecha[i], registrosHoras[i], registrosActividad[i]);
+			}
+		}
+
+		if (cantidadOpciones == 0) {
+			System.out.println("No tiene actividades registradas para eliminar.");
+			return;
+		}
+
+		System.out.print("Seleccione la actividad a eliminar: ");
+		String opcion = scanner.nextLine();
+
+		if (opcion.equals("0")) {
+			return;
+		}
+
+		int seleccion;
+		try {
+			seleccion = Integer.parseInt(opcion);
+		} catch (Exception e) {
+			System.out.println();
+			System.out.println("Opcion no valida.");
+			return;
+		}
+
+		if (seleccion < 1 || seleccion > cantidadOpciones) {
+			System.out.println();
+			System.out.println("Opcion no valida.");
+			return;
+		}
+
+		int indice = indicesVisibles[seleccion - 1];
+
+		if (!registrosID[indice].equals(usuarioActual)) {
+			System.out.println();
+			System.out.println("No puede eliminar actividades de otros usuarios.");
+			return;
+		}
+
+		for (int i = indice; i < cantidadRegistros - 1; i++) {
+			registrosID[i] = registrosID[i + 1];
+			registrosFecha[i] = registrosFecha[i + 1];
+			registrosHoras[i] = registrosHoras[i + 1];
+			registrosActividad[i] = registrosActividad[i + 1];
+		}
+
+		registrosID[cantidadRegistros - 1] = null;
+		registrosFecha[cantidadRegistros - 1] = null;
+		registrosHoras[cantidadRegistros - 1] = 0;
+		registrosActividad[cantidadRegistros - 1] = null;
+		cantidadRegistros--;
+
+		guardarRegistros();
+
+		System.out.println();
+		System.out.println("Actividad eliminada correctamente.");
 	}
 
 	public static void menuAnalisis() {
