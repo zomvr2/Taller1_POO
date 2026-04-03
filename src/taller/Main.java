@@ -127,7 +127,7 @@ public class Main {
 		}
 	}
 
-	static void cargarUsuarios() {
+	private static void cargarUsuarios() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("usuarios.txt"));
 			String linea = br.readLine();
@@ -154,7 +154,7 @@ public class Main {
 		}
 	}
 
-	static boolean verificarUsuario(String id, String pass) {
+	private static boolean verificarUsuario(String id, String pass) {
 		for (int i = 0; i < cantidadUsuarios; i++) {
 			if (usuariosID[i].equals(id) && usuariosPass[i].equals(pass)) {
 				return true;
@@ -164,7 +164,7 @@ public class Main {
 		return false;
 	}
 
-	static boolean iniciarSesion() {
+	private static boolean iniciarSesion() {
 		Scanner scanner = new Scanner(System.in);
 
 		System.out.println();
